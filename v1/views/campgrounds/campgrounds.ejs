@@ -1,0 +1,31 @@
+<%include ../partials/header%>
+
+<div class="container">
+  <header class="jumbotron">
+    <div class="container">
+      <h2>All camps</h2>
+      <p>
+        <a class="btn btn-primary btn-lg" href="/campgrounds/new"
+          >Add new camps</a
+        >
+      </p>
+    </div>
+  </header>
+  <div class="row" style="display:flex; flex-wrap: wrap;text-align: center">
+    <% camps.forEach(function(camp){ %>
+    <div class="col-md-3 col-sm-6">
+      <a href="/campgrounds/<%=camp._id%>">
+        <div class="thumbnail">
+          <img src="<%=camp.url%>" alt="camp img of <%=camp.name%>" />
+          <div class="caption">
+            <h4><%=camp.name%></h4>
+          </div>
+        </div>
+      </div>
+    </a>
+      
+    <% }); %>
+  </div>
+</div>
+<%include ../partials/footer%>
+<!--  ../ for moving one directory above because we moved files in separate folders -->

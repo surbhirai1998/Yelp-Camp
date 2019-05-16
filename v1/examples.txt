@@ -1,0 +1,47 @@
+/*var camps = [
+  {
+    name: "A",
+    url:
+      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Wilderness_Adventure_Camps.jpg"
+  },
+  {
+    name: "B",
+    url:
+      "https://res.cloudinary.com/simplotel/image/upload/x_0,y_0,w_2592,h_1458,r_0,c_crop,q_60,fl_progressive/w_960,f_auto,c_fit/youreka/Camp-Kambre_hcemsr"
+  },
+  {
+    name: "C",
+    url: "http://bushcampcompany.com/photos/home_camps_kuyenda_new2.jpg"
+  },
+  {
+    name: "D",
+    url:
+      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Wilderness_Adventure_Camps.jpg"
+  },
+  {
+    name: "E",
+    url:
+      "https://res.cloudinary.com/simplotel/image/upload/x_0,y_0,w_2592,h_1458,r_0,c_crop,q_60,fl_progressive/w_960,f_auto,c_fit/youreka/Camp-Kambre_hcemsr"
+  },
+  {
+    name: "F",
+    url: "http://bushcampcompany.com/photos/home_camps_kuyenda_new2.jpg"
+  }
+];
+*/
+/* camps.forEach(function(camp) {
+  Campground.create(
+    {
+      name: camp.name,
+      url: camp.url
+    },
+    function(err, c) {
+      if (err) {
+        console.log("error in adding camp");
+      } else {
+        console.log("camp added");
+        console.log(c);
+      }
+    }
+  );
+}); */
