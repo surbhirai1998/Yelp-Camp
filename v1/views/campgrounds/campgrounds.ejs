@@ -14,16 +14,17 @@
   <div class="row" style="display:flex; flex-wrap: wrap;text-align: center">
     <% camps.forEach(function(camp){ %>
     <div class="col-md-3 col-sm-6">
-      <a href="/campgrounds/<%=camp._id%>">
-        <div class="thumbnail">
-          <img src="<%=camp.url%>" alt="camp img of <%=camp.name%>" />
-          <div class="caption">
-            <h4><%=camp.name%></h4>
-          </div>
+      <div class="thumbnail">
+        <img src="<%=camp.url%>" alt="camp img of <%=camp.name%>" />
+        <div class="caption">
+          <h4><%=camp.name%></h4>
+          <a class="btn btn-primary" href="/campgrounds/<%=camp._id%>"
+            >More Info
+          </a>
         </div>
       </div>
-    </a>
-      
+    </div>
+
     <% }); %>
   </div>
 </div>

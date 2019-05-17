@@ -38,6 +38,49 @@ router.post("/campgrounds/:id/comments", isLoggedIn, function(req, res) {
   });
 });
 
+router.get(
+  "/campgrounds/:id/comments/:comment_id/edit",
+  checkCommentOwnership,
+  function(req, res) {
+    Comment.findById(req.params.comment_id, function(err, comment) {
+      res.render("comments/edit", {
+        comment: comment,
+        campground_id: req.params.id
+      });
+    });
+  }
+);
+/* if put route not working then check for?_method also app.use(_method) above routes in app.js*/
+router.put(
+  "/campgrounds/:id/comments/:comment_id",
+  checkCommentOwnership,
+  function(req, res) {
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(
+      err,
+      comment
+    ) {
+      if (err) {
+        res.redirect("back");
+      }
+      res.redirect("/campgrounds/" + req.params.id);
+    });
+  }
+);
+
+router.delete(
+  "/campgrounds/:id/comments/:comment_id",
+  checkCommentOwnership,
+  function(req, res) {
+    Comment.findByIdAndRemove(req.params.comment_id, function(err) {
+      if (err) {
+        res.redirect("back");
+      } else {
+        res.redirect("/campgrounds/" + req.params.id);
+      }
+    });
+  }
+);
+
 //----------Middleware (for no access if not looged in)------------
 function isLoggedIn(req, res, next) {
   //put this as middle ware in comments
@@ -47,3 +90,16 @@ function isLoggedIn(req, res, next) {
   res.redirect("/login");
 }
 module.exports = router;
+
+function checkCommentOwnership(req, res, next) {
+  if (req.isAuthenticated()) {
+    Comment.findById(req.params.comment_id, function(err, comment) {
+      if (err) {
+        res.redirect("back");
+      }
+      next();
+    });
+  } else {
+    res.redirect("back");
+  }
+}

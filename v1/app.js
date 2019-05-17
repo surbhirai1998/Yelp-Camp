@@ -9,6 +9,7 @@ var User = require("./models/user");
 var campgroundRoutes = require("./routes/campgrounds");
 var commentRoutes = require("./routes/comments");
 var indexRoutes = require("./routes/index");
+var methodOverride = require("method-override");
 var seedDB = require("./seeds");
 //seedDB();
 
@@ -38,6 +39,7 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user; //put res not req
   next();
 });
+app.use(methodOverride("_method")); //above all routes
 app.use(commentRoutes);
 app.use(campgroundRoutes);
 app.use(indexRoutes);

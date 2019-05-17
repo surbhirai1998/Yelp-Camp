@@ -22,6 +22,20 @@
           <h4><a><%=camp.name%></a></h4>
         </div>
         <p><strong>Description : </strong><%=camp.description%></p>
+        <p><em>Created By : <%=camp.author.username%></em></p>
+        <!--  EDIT and DELETE  -->
+        <% if(currentUser && camp.author.id.equals(currentUser._id)){%>
+        <a class="btn btn-xs btn-warning" href="/campgrounds/<%=camp._id%>/edit"
+          >Edit</a
+        >
+        <form
+          class="delete-form"
+          action="/campgrounds/<%=camp._id%>?_method=DELETE"
+          method="POST"
+        >
+          <button class="btn btn-xs btn-danger">Delete</button>
+        </form>
+        <%}%>
       </div>
       <div class="well">
         <div class="text-right">
@@ -39,6 +53,20 @@
             <b><%=comment.author.username%></b>
             <span class="pull-right">10 days ago</span>
             <p><%=comment.text%></p>
+            <% if(currentUser && comment.author.id.equals(currentUser._id)){%>
+            <a
+              class="btn btn-xs btn-warning"
+              href="/campgrounds/<%=camp._id%>/comments/<%=comment._id%>/edit"
+              >Edit</a
+            >
+            <form
+              class="delete-form"
+              action="/campgrounds/<%=camp._id%>/comments/<%=comment._id%>?_method=DELETE"
+              method="POST"
+            >
+              <button class="btn btn-xs btn-danger">Delete</button>
+            </form>
+            <%}%>
           </div>
         </div>
         <%}); %>

@@ -21,6 +21,10 @@ router.post("/campgrounds", isLoggedIn, function(req, res) {
   var name = req.body.name;
   var url = req.body.url;
   var description = req.body.description;
+  var author = {
+    id: req.user._id,
+    username: req.user.username
+  };
   /*var obj = {
       name: name,
       url: url
@@ -30,7 +34,8 @@ router.post("/campgrounds", isLoggedIn, function(req, res) {
     {
       name: name,
       url: url,
-      description: description
+      description: description,
+      author: author
     },
     function(err, c) {
       if (err) {
@@ -69,6 +74,45 @@ router.get("/campgrounds/:id", function(req, res) {
     
     */
 });
+
+//EDIT
+router.get("/campgrounds/:id/edit", checkCampgroundOwnership, function(
+  req,
+  res
+) {
+  Campground.findById(req.params.id, function(err, camp) {
+    res.render("campgrounds/edit", { camp: camp });
+  });
+});
+
+//UPDATE
+router.put("/campgrounds/:id", checkCampgroundOwnership, function(req, res) {
+  Campground.findByIdAndUpdate(req.params.id, req.body.camp, function(
+    err,
+    camp
+  ) {
+    if (err) {
+      console.log(err);
+      res.redirect("/campgrounds");
+    } else {
+      res.redirect("/campgrounds/" + req.params.id);
+    }
+  });
+});
+
+//DESTROY
+router.delete("/campgrounds/:id", checkCampgroundOwnership, function(req, res) {
+  //the route should be coming from a form
+  Campground.findByIdAndRemove(req.params.id, function(err) {
+    if (err) {
+      console.log(err);
+      res.redirect("/campgrounds");
+    } else {
+      res.redirect("/campgrounds");
+    }
+  });
+});
+
 //----------Middleware (for no access if not looged in)------------
 function isLoggedIn(req, res, next) {
   //put this as middle ware in comments
@@ -76,5 +120,25 @@ function isLoggedIn(req, res, next) {
     return next();
   }
   res.redirect("/login");
+}
+
+function checkCampgroundOwnership(req, res, next) {
+  if (req.isAuthenticated()) {
+    Campground.findById(req.params.id, function(err, camp) {
+      if (err) {
+        console.log(err);
+        res.redirect("back"); //1 page back
+      } else {
+        if (camp.author.id.equals(req.user._id)) {
+          //== not used as camp.author.id is a mongoose object while other one is string
+          next();
+        } else {
+          res.redirect("back");
+        }
+      }
+    });
+  } else {
+    res.redirect("back");
+  }
 }
 module.exports = router;
