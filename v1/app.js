@@ -11,6 +11,7 @@ var commentRoutes = require("./routes/comments");
 var indexRoutes = require("./routes/index");
 var methodOverride = require("method-override");
 var seedDB = require("./seeds");
+var flash = require("connect-flash");
 //seedDB();
 
 var app = express();
@@ -28,7 +29,7 @@ app.use(
     saveUninitialized: false
   })
 );
-
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -37,20 +38,14 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user; //put res not req
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
   next();
 });
 app.use(methodOverride("_method")); //above all routes
 app.use(commentRoutes);
 app.use(campgroundRoutes);
 app.use(indexRoutes);
-//----------Middleware (for no access if not looged in)------------
-function isLoggedIn(req, res, next) {
-  //put this as middle ware in comments
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-}
 
 app.listen(8080, function() {
   console.log("yelp camp app v1 is running");

@@ -7,7 +7,10 @@ var middleware = require("../middleware");
 router.get("/campgrounds", function(req, res) {
   Campground.find({}, function(err, camps) {
     if (err) {
-      console.log("error dispalying the camps");
+      req.flash(
+        "error",
+        "Cannot Display Campgrounds at the moment! Please Refresh the page."
+      );
     } else {
       res.render("campgrounds/campgrounds", { camps: camps });
     }
@@ -40,10 +43,9 @@ router.post("/campgrounds", middleware.isLoggedIn, function(req, res) {
     },
     function(err, c) {
       if (err) {
-        console.log("error in adding camp");
+        req.flash("error", "Something went wrong");
       } else {
-        console.log("camp added");
-        console.log(c);
+        req.flash("success", "Successfully added the campground");
       }
     }
   );
@@ -57,8 +59,9 @@ router.get("/campgrounds/:id", function(req, res) {
   Campground.findById(id)
     .populate("comments")
     .exec(function(err, camp) {
-      if (err) {
-        console.log(err);
+      if (err || !camp) {
+        req.flash("error", "Campground not found");
+        res.redirect("/campgrounds");
       } else {
         res.render("campgrounds/show", { camp: camp });
       }
@@ -96,10 +99,11 @@ router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, function(
     err,
     camp
   ) {
-    if (err) {
-      console.log(err);
+    if (err || !camp) {
+      req.flash("error", "Something went wrong");
       res.redirect("/campgrounds");
     } else {
+      req.flash("success", "Successfully updated the campground");
       res.redirect("/campgrounds/" + req.params.id);
     }
   });
@@ -113,9 +117,10 @@ router.delete("/campgrounds/:id", middleware.checkCampgroundOwnership, function(
   //the route should be coming from a form
   Campground.findByIdAndRemove(req.params.id, function(err) {
     if (err) {
-      console.log(err);
-      res.redirect("/campgrounds");
+      req.flash("error", err.message);
+      res.redirect("back");
     } else {
+      req.flash("success", "Successfully deleted the campground");
       res.redirect("/campgrounds");
     }
   });
